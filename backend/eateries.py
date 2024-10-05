@@ -1,5 +1,8 @@
 import requests
 from Food import Food
+from NutritionCaller import fill_nutrition
+
+food_dict = {}
 
 url = "https://now.dining.cornell.edu/api/1.0/dining/eateries.json"
 
@@ -68,8 +71,10 @@ if response.status_code == 200:
                     #Looking at each food item in category
                     for item in catType["items"]:
                         name = item["item"]
-                        foodItem = Food(name, category)
-                        food.append(foodItem)
+                        food.append(name)
+
+                        if name not in food_dict:
+                            food_dict[name] = None
 
                 new_event = {
                     "Description" : descr,
@@ -99,6 +104,10 @@ if response.status_code == 200:
 
         eateries.append(new_eatery)
 
+    print(len(food_dict.keys()))
+    fill_nutrition(food_dict)
+
 else:
     print(f"Failed to retrieve data. HTTP Status Code: {response.status_code}")
+
 

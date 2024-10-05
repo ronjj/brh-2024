@@ -23,12 +23,12 @@ class Food:
     # Ingredient List
     ingredients = []
 
-    def __init__(self, title, category):
+    def __init__(self, title):
         self.title = title
-        self.category = category
-
-        #MAKE MORE EFFICIENT:
-        #self.setup_food()
+        self.calories = 0.0
+        self.carbs = 0.0
+        self.protein = 0.0
+        self.fat = 0.0
 
     # Make API Calls etc
     def setup_food(self):
