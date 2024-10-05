@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+pydantic
+pydantic-settings
+firebase-admin
+google-auth
+google-auth-oauthlib
+google-auth-httplib2
+google-api-python-client
