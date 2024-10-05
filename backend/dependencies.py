@@ -1,6 +1,6 @@
 from fastapi import Depends, HTTPException, status
 from firebase_admin import auth
-from app.firebase_utils import get_firebase_app
+from firebase_utils import get_firebase_app
 
 def get_current_user(token: str = Depends(auth.verify_id_token)):
     try:

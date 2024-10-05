@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Depends
-from app.dependencies import get_current_user
-from app.services.calendar_service import CalendarService
+from dependencies import get_current_user
+from services.calendar_service import CalendarService
 
 router = APIRouter()
 

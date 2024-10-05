@@ -1,6 +1,6 @@
 import firebase_admin
 from firebase_admin import credentials
-from app.config import settings
+from config import settings
 
 def get_firebase_app():
     if not firebase_admin._apps:

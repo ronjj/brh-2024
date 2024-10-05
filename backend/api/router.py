@@ -1,5 +1,5 @@
 from fastapi import APIRouter
-from app.api.endpoints import auth, calendar
+from api.endpoints import auth, calendar
 
 router = APIRouter()
 
