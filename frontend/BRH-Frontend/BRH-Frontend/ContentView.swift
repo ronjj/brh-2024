@@ -50,7 +50,7 @@ struct MacroOnboardingView: View {
             .padding()
             .navigationBarHidden(true)
             .background(
-                NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
+                NavigationLink(destination: HomeView().navigationBarBackButtonHidden(true), isActive: $navigateToHome) {
                     EmptyView()
                 }
             )
@@ -82,14 +82,5 @@ struct MacroOnboardingView: View {
         
         // Mark onboarding as complete
         hasCompletedOnboarding = true
-    }
-}
-
-struct HomeView: View {
-    var body: some View {
-        Text("Welcome to the Home View!")
-            .font(.largeTitle)
-            .navigationBarTitle("Home", displayMode: .inline)
-            .navigationBarBackButtonHidden(true)
     }
 }
