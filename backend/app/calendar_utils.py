@@ -11,7 +11,7 @@ from googleapiclient.errors import HttpError
 
 from app.config import settings
 
-SCOPES = ["https://www.googleapis.com/auth/calendar.readonly"]
+SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/calendar.events"]
 
 # Gym schedule representation
 GYM_SCHEDULE = {
@@ -63,6 +63,12 @@ GYM_SCHEDULE = {
 }
 
 EST_TIMEZONE = ZoneInfo("America/New_York")
+
+import random
+
+def get_random_workout():
+    workouts = ["Back", "Legs", "Chest", "Arms", "Shoulders", "Cardio", "Core", "Full Body"]
+    return random.choice(workouts)
 
 def get_calendar_service():
     creds = None
@@ -118,7 +124,7 @@ def get_free_busy(service, date: datetime.date):
     body = {
         "timeMin": start_datetime.isoformat(),
         "timeMax": end_datetime.isoformat(),
-        "items": [{"id": "primary"}]  # You can add more calendar IDs here if needed
+        "items": [{"id": "primary"}]  # TODO: make this add ALL calendars, or those specified by the user
     }
     
     events_result = service.freebusy().query(body=body).execute()
