@@ -1,22 +1,10 @@
 import SwiftUI
 
-struct ContentView: View {
-    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
-
-    var body: some View {
-        if hasCompletedOnboarding {
-            HomeView()
-        } else {
-            MacroOnboardingView()
-        }
-    }
-}
-
 struct MacroOnboardingView: View {
-    @State private var calorieGoal: String = ""
-    @State private var proteinGoal: String = ""
-    @State private var carbGoal: String = ""
-    @State private var fatGoal: String = ""
+    @AppStorage("userCalorieGoal") private var userCalorieGoal = ""
+    @AppStorage("userProteinGoal") private var userProteinGoal = ""
+    @AppStorage("userCarbGoal") private var userCarbGoal = ""
+    @AppStorage("userFatGoal") private var userFatGoal = ""
     @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
     @State private var navigateToHome = false
     
@@ -27,10 +15,10 @@ struct MacroOnboardingView: View {
                     .font(.largeTitle)
                     .padding()
                 
-                nutritionInputView(title: "What is your daily caloric goal?", value: $calorieGoal, unit: "calories")
-                nutritionInputView(title: "How many grams of protein?", value: $proteinGoal, unit: "g")
-                nutritionInputView(title: "How many grams of carbs?", value: $carbGoal, unit: "g")
-                nutritionInputView(title: "How many grams of fats?", value: $fatGoal, unit: "g")
+                nutritionInputView(title: "What is your daily caloric goal?", value: $userCalorieGoal, unit: "calories")
+                nutritionInputView(title: "How many grams of protein?", value: $userProteinGoal, unit: "g")
+                nutritionInputView(title: "How many grams of carbs?", value: $userCarbGoal, unit: "g")
+                nutritionInputView(title: "How many grams of fats?", value: $userFatGoal, unit: "g")
                 
                 Spacer()
                 
@@ -73,14 +61,9 @@ struct MacroOnboardingView: View {
     }
     
     func completeOnboarding() {
-        // Save the user's preferences here
-        // For example:
-        // UserDefaults.standard.set(calorieGoal, forKey: "userCalorieGoal")
-        // UserDefaults.standard.set(proteinGoal, forKey: "userProteinGoal")
-        // UserDefaults.standard.set(carbGoal, forKey: "userCarbGoal")
-        // UserDefaults.standard.set(fatGoal, forKey: "userFatGoal")
-        
-        // Mark onboarding as complete
+        // The user's preferences are already saved in AppStorage
+        // Just mark onboarding as complete
         hasCompletedOnboarding = true
     }
 }
+
