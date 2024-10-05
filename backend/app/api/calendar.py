@@ -27,8 +27,8 @@ async def create_event(event: dict):
 async def get_available_gym_slots(gym: str, date: date):
     try:
         service = get_calendar_service()
-        events = get_free_busy(service, date) # get timeslots that are busy (when another event is happening)
-        return find_available_slots(gym, date, events)
+        busy_slots = get_free_busy(service, date) # get timeslots that are busy (when another event is happening)
+        return find_available_slots(gym, date, busy_slots)
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
     except KeyError:

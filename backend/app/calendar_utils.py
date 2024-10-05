@@ -1,6 +1,7 @@
 import datetime
 import os.path
 from typing import List, Dict
+from zoneinfo import ZoneInfo
 
 from google.auth.transport.requests import Request
 from google.oauth2.credentials import Credentials
@@ -61,6 +62,8 @@ GYM_SCHEDULE = {
     }
 }
 
+EST_TIMEZONE = ZoneInfo("America/New_York")
+
 def get_calendar_service():
     creds = None
     if os.path.exists("token.json"):
@@ -108,8 +111,9 @@ def get_calendar_service():
 #     return events_result.get("items", [])
 
 def get_free_busy(service, date: datetime.date):
-    start_datetime = datetime.datetime.combine(date, datetime.time.min).astimezone(datetime.timezone.utc)
-    end_datetime = datetime.datetime.combine(date, datetime.time.max).astimezone(datetime.timezone.utc)
+    # Convert the date to EST timezone
+    start_datetime = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=EST_TIMEZONE)
+    end_datetime = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=EST_TIMEZONE)
     
     body = {
         "timeMin": start_datetime.isoformat(),
@@ -137,11 +141,11 @@ def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
     day_name = date.strftime("%A")
     gym_hours = get_gym_hours(gym, day_name)
     
-    # Convert busy slots to datetime.time objects
+    # Convert busy slots to datetime.time objects in EST
     busy_times = []
     for slot in busy_slots:
-        start = datetime.datetime.fromisoformat(slot['start']).astimezone(datetime.timezone.utc).time()
-        end = datetime.datetime.fromisoformat(slot['end']).astimezone(datetime.timezone.utc).time()
+        start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE).time()
+        end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE).time()
         busy_times.append({"start": start, "end": end})
 
     print(busy_times)
