@@ -8,7 +8,7 @@ app.include_router(calendar.router, prefix="/calendar", tags=["calendar"])
 
 @app.get("/")
 async def root():
-    return {"message": "Welcome to the Calendar Integration API"}
+    return {"message": "Omnisplit"}
 
 if __name__ == "__main__":
     import uvicorn

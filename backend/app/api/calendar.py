@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.calendar_utils import get_calendar_service, get_upcoming_events, find_available_slots
+from app.calendar_utils import get_calendar_service, get_free_busy, find_available_slots
 from googleapiclient.errors import HttpError
 from datetime import datetime, date
 
@@ -27,10 +27,8 @@ async def create_event(event: dict):
 async def get_available_gym_slots(gym: str, date: date):
     try:
         service = get_calendar_service()
-        events = get_upcoming_events(service, max_results=50)  # Increase max_results if needed
-        print([{"start": event["start"].get("dateTime", event["start"].get("date")), "summary": event["summary"]} for event in events])
-        available_slots = find_available_slots(gym, date, events)
-        return [{"start": slot["start"].strftime("%H:%M"), "end": slot["end"].strftime("%H:%M")} for slot in available_slots]
+        events = get_free_busy(service, date) # get timeslots that are busy (when another event is happening)
+        return find_available_slots(gym, date, events)
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
     except KeyError:

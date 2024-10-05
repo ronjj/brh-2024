@@ -78,16 +78,49 @@ def get_calendar_service():
     
     return build("calendar", "v3", credentials=creds)
 
-def get_upcoming_events(service, max_results=10):
-    now = datetime.datetime.utcnow().isoformat() + "Z"
-    events_result = service.events().list(
-        calendarId="primary",
-        timeMin=now,
-        maxResults=max_results,
-        singleEvents=True,
-        orderBy="startTime",
-    ).execute()
-    return events_result.get("items", [])
+# not needed for now
+# def get_upcoming_events(service, max_results=10):
+#     now = datetime.datetime.utcnow().isoformat() + "Z"
+#     events_result = service.events().list(
+#         calendarId="primary",
+#         timeMin=now,
+#         maxResults=max_results,
+#         singleEvents=True,
+#         orderBy="startTime",
+#     ).execute()
+#     return events_result.get("items", [])
+
+# not needed for now
+# def get_events_for_date(service, date: datetime.date):
+#     start_datetime = datetime.datetime.combine(date, datetime.time.min).astimezone(datetime.timezone.utc)
+#     end_datetime = datetime.datetime.combine(date, datetime.time.max).astimezone(datetime.timezone.utc)
+    
+#     start_str = start_datetime.isoformat()
+#     end_str = end_datetime.isoformat()
+
+#     events_result = service.events().list(
+#         calendarId="primary",
+#         timeMin=start_str,
+#         timeMax=end_str,
+#         singleEvents=True,
+#         orderBy="startTime",
+#     ).execute()
+#     return events_result.get("items", [])
+
+def get_free_busy(service, date: datetime.date):
+    start_datetime = datetime.datetime.combine(date, datetime.time.min).astimezone(datetime.timezone.utc)
+    end_datetime = datetime.datetime.combine(date, datetime.time.max).astimezone(datetime.timezone.utc)
+    
+    body = {
+        "timeMin": start_datetime.isoformat(),
+        "timeMax": end_datetime.isoformat(),
+        "items": [{"id": "primary"}]  # You can add more calendar IDs here if needed
+    }
+    
+    events_result = service.freebusy().query(body=body).execute()
+    busy_slots = events_result["calendars"]["primary"]["busy"]
+    
+    return busy_slots
 
 def parse_time(time_str: str) -> datetime.time:
     return datetime.datetime.strptime(time_str, "%H:%M").time()
@@ -99,25 +132,27 @@ def get_gym_hours(gym: str, day: str) -> List[Dict[str, datetime.time]]:
     else:
         return [{"open": parse_time(schedule["open"]), "close": parse_time(schedule["close"])}]
 
-def find_available_slots(gym: str, date: datetime.date, events: List[Dict]):
+# returns a list of available slots for the gym on the given date, in the format of a list of dictionaries with start and end times
+def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
     day_name = date.strftime("%A")
     gym_hours = get_gym_hours(gym, day_name)
     
-    # Convert events to datetime objects
-    calendar_events = []
-    for event in events:
-        start = datetime.datetime.fromisoformat(event['start'].get('dateTime', event['start'].get('date')))
-        end = datetime.datetime.fromisoformat(event['end'].get('dateTime', event['end'].get('date')))
-        if start.date() == date:
-            calendar_events.append({"start": start.time(), "end": end.time()})
+    # Convert busy slots to datetime.time objects
+    busy_times = []
+    for slot in busy_slots:
+        start = datetime.datetime.fromisoformat(slot['start']).astimezone(datetime.timezone.utc).time()
+        end = datetime.datetime.fromisoformat(slot['end']).astimezone(datetime.timezone.utc).time()
+        busy_times.append({"start": start, "end": end})
+
+    print(busy_times)
     
     available_slots = []
     for hours in gym_hours:
         current_time = hours["open"]
-        for event in sorted(calendar_events, key=lambda x: x["start"]):
-            if current_time < event["start"] and event["start"] < hours["close"]:
-                available_slots.append({"start": current_time, "end": event["start"]})
-            current_time = max(current_time, event["end"])
+        for busy in sorted(busy_times, key=lambda x: x["start"]):
+            if current_time < busy["start"] and busy["start"] < hours["close"]:
+                available_slots.append({"start": current_time, "end": busy["start"]})
+            current_time = max(current_time, busy["end"])
         
         if current_time < hours["close"]:
             available_slots.append({"start": current_time, "end": hours["close"]})
