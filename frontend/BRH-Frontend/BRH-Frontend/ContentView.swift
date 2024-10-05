@@ -1,47 +1,44 @@
-//
-//  ContentView.swift
-//  BRH-Frontend
-//
-//  Created by Ronald Jabouin on 10/4/24.
-//
-
 import SwiftUI
 
-struct OnboardingView: View {
+struct ContentView: View {
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+
+    var body: some View {
+        if hasCompletedOnboarding {
+            HomeView()
+        } else {
+            MacroOnboardingView()
+        }
+    }
+}
+
+struct MacroOnboardingView: View {
     @State private var calorieGoal: String = ""
     @State private var proteinGoal: String = ""
     @State private var carbGoal: String = ""
     @State private var fatGoal: String = ""
-    @State private var currentStep = 0
-    
-    let steps = ["Calorie", "Protein", "Carb", "Fat"]
+    @AppStorage("hasCompletedOnboarding") private var hasCompletedOnboarding = false
+    @State private var navigateToHome = false
     
     var body: some View {
-        VStack {
-            Text("Set Your Nutrition Goals")
-                .font(.largeTitle)
-                .padding()
-            
-            Spacer()
-            
-            switch currentStep {
-            case 0:
+        NavigationView {
+            VStack(spacing: 20) {
+                Text("Set Your Nutrition Goals")
+                    .font(.largeTitle)
+                    .padding()
+                
                 nutritionInputView(title: "What is your daily caloric goal?", value: $calorieGoal, unit: "calories")
-            case 1:
                 nutritionInputView(title: "How many grams of protein?", value: $proteinGoal, unit: "g")
-            case 2:
                 nutritionInputView(title: "How many grams of carbs?", value: $carbGoal, unit: "g")
-            case 3:
                 nutritionInputView(title: "How many grams of fats?", value: $fatGoal, unit: "g")
-            default:
-                Text("Setup Complete!")
-            }
-            
-            Spacer()
-            
-            if currentStep < steps.count {
-                Button(action: nextStep) {
-                    Text("Next")
+                
+                Spacer()
+                
+                Button {
+                    completeOnboarding()
+                    navigateToHome = true
+                } label: {
+                    Text("Complete Setup")
                         .frame(minWidth: 0, maxWidth: .infinity)
                         .padding()
                         .background(Color.blue)
@@ -50,14 +47,18 @@ struct OnboardingView: View {
                 }
                 .padding()
             }
-            
-            ProgressView(value: Double(currentStep), total: Double(steps.count))
-                .padding()
+            .padding()
+            .navigationBarHidden(true)
+            .background(
+                NavigationLink(destination: HomeView(), isActive: $navigateToHome) {
+                    EmptyView()
+                }
+            )
         }
     }
     
     func nutritionInputView(title: String, value: Binding<String>, unit: String) -> some View {
-        VStack {
+        VStack(alignment: .leading) {
             Text(title)
                 .font(.headline)
             
@@ -68,14 +69,27 @@ struct OnboardingView: View {
                 
                 Text(unit)
             }
-            .padding()
         }
     }
     
-    func nextStep() {
-        if currentStep < steps.count {
-            currentStep += 1
-        }
+    func completeOnboarding() {
+        // Save the user's preferences here
+        // For example:
+        // UserDefaults.standard.set(calorieGoal, forKey: "userCalorieGoal")
+        // UserDefaults.standard.set(proteinGoal, forKey: "userProteinGoal")
+        // UserDefaults.standard.set(carbGoal, forKey: "userCarbGoal")
+        // UserDefaults.standard.set(fatGoal, forKey: "userFatGoal")
+        
+        // Mark onboarding as complete
+        hasCompletedOnboarding = true
     }
 }
 
+struct HomeView: View {
+    var body: some View {
+        Text("Welcome to the Home View!")
+            .font(.largeTitle)
+            .navigationBarTitle("Home", displayMode: .inline)
+            .navigationBarBackButtonHidden(true)
+    }
+}
