@@ -17,7 +17,7 @@ struct HomeView: View {
 }
 
 struct HomeTabView: View {
-    @State private var mealPlans: [String: DayPlan] = [:]
+    @State private var mealPlans: [Date: DayPlan] = [:]
     
     var body: some View {
         NavigationView {
@@ -35,17 +35,16 @@ struct HomeTabView: View {
                         }
                     }
                 }
-                .background(Color(UIColor.systemGroupedBackground))
             }
             .navigationTitle("Meal Plans")
             .onAppear(perform: loadData)
         }
     }
     
-    private func sectionHeader(for date: String) -> some View {
-        Text(date)
-            .font(.caption)
-            .foregroundColor(.purple)
+    private func sectionHeader(for date: Date) -> some View {
+        Text(formatDate(date))
+            .font(.headline)
+            .foregroundColor(.accentColor)
             .frame(maxWidth: .infinity, alignment: .leading)
             .padding(.horizontal)
             .padding(.top, 20)
@@ -53,20 +52,44 @@ struct HomeTabView: View {
             .background(Color(UIColor.systemGroupedBackground))
     }
     
+    private func formatDate(_ date: Date) -> String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "EEEE, MMMM d"
+        let formatted = formatter.string(from: date)
+        return formatted + daySuffix(from: date)
+    }
+    
+    private func daySuffix(from date: Date) -> String {
+        let calendar = Calendar.current
+        let dayOfMonth = calendar.component(.day, from: date)
+        switch dayOfMonth {
+        case 1, 21, 31: return "st"
+        case 2, 22: return "nd"
+        case 3, 23: return "rd"
+        default: return "th"
+        }
+    }
+    
     private func loadData() {
-        // In a real app, you'd parse the JSON here
-        // For this example, we'll use a mock data structure
-        mealPlans = [
-            "2024-10-05": DayPlan(meals: [
-                Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:30pm", end: "4:00pm")),
-                Meal(eatery: "Keeton House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
-                Meal(eatery: "104West!", time: "Lunch", details: MealDetails(start: "12:30pm", end: "2:00pm"))
-            ]),
-            "2024-10-06": DayPlan(meals: [
-                Meal(eatery: "Becker House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
-                Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:00pm", end: "4:00pm"))
-            ])
-        ]
+        // In a real app, you'd parse the JSON here and convert string dates to Date objects
+        // For this example, we'll use mock data
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
+        
+        if let date1 = dateFormatter.date(from: "2024-10-05"),
+           let date2 = dateFormatter.date(from: "2024-10-06") {
+            mealPlans = [
+                date1: DayPlan(meals: [
+                    Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:30pm", end: "4:00pm")),
+                    Meal(eatery: "Keeton House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
+                    Meal(eatery: "104West!", time: "Lunch", details: MealDetails(start: "12:30pm", end: "2:00pm"))
+                ]),
+                date2: DayPlan(meals: [
+                    Meal(eatery: "Becker House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
+                    Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:00pm", end: "4:00pm"))
+                ])
+            ]
+        }
     }
 }
 
@@ -93,7 +116,7 @@ struct PlanRowView: View {
     var body: some View {
         HStack {
             Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
-                .foregroundColor(isChecked ? .blue : .gray)
+                .foregroundColor(isChecked ? .accentColor : .gray)
                 .onTapGesture {
                     isChecked.toggle()
                 }

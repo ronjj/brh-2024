@@ -14,6 +14,7 @@
 		541258712CB0D29F00C2D520 /* HomeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 541258702CB0D29F00C2D520 /* HomeView.swift */; };
 		5499574A2CB23BB400ABCBD5 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549957492CB23BB400ABCBD5 /* PreferencesView.swift */; };
 		5499574C2CB2430500ABCBD5 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5499574B2CB2430500ABCBD5 /* SplashScreenView.swift */; };
+		5499574E2CB2A23C00ABCBD5 /* GoogleCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5499574D2CB2A23C00ABCBD5 /* GoogleCalendarView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -25,6 +26,7 @@
 		541258702CB0D29F00C2D520 /* HomeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeView.swift; sourceTree = "<group>"; };
 		549957492CB23BB400ABCBD5 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		5499574B2CB2430500ABCBD5 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
+		5499574D2CB2A23C00ABCBD5 /* GoogleCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleCalendarView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -41,6 +43,7 @@
 		541258562CB0CA8200C2D520 = {
 			isa = PBXGroup;
 			children = (
+				5499574D2CB2A23C00ABCBD5 /* GoogleCalendarView.swift */,
 				541258612CB0CA8200C2D520 /* BRH-Frontend */,
 				541258602CB0CA8200C2D520 /* Products */,
 			);
@@ -149,6 +152,7 @@
 				541258712CB0D29F00C2D520 /* HomeView.swift in Sources */,
 				5499574A2CB23BB400ABCBD5 /* PreferencesView.swift in Sources */,
 				5499574C2CB2430500ABCBD5 /* SplashScreenView.swift in Sources */,
+				5499574E2CB2A23C00ABCBD5 /* GoogleCalendarView.swift in Sources */,
 				541258652CB0CA8200C2D520 /* ContentView.swift in Sources */,
 				541258632CB0CA8200C2D520 /* BRH_FrontendApp.swift in Sources */,
 			);

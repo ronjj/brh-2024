@@ -61,7 +61,7 @@ struct MacroInputView: View {
                 Text("Next")
                     .frame(minWidth: 0, maxWidth: .infinity)
                     .padding()
-                    .background(Color.blue)
+                    .background(Color.accentColor)
                     .foregroundColor(.white)
                     .cornerRadius(10)
             }
@@ -105,7 +105,7 @@ struct GoogleLoginView: View {
                 onLoginSuccess()
             }
             .padding()
-            .background(Color.blue)
+            .background(Color.accentColor)
             .foregroundColor(.white)
             .cornerRadius(10)
         }
