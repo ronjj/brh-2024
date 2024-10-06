@@ -11,7 +11,7 @@ import SwiftUI
 struct BRH_FrontendApp: App {
     var body: some Scene {
         WindowGroup {
-            MacroOnboardingView()
+            SplashScreenView()
         }
     }
 }
