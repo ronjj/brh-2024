@@ -16,41 +16,34 @@ struct HomeView: View {
     }
 }
 
-
 struct HomeTabView: View {
-    let plans = [
-        Plan(location: "Teagle Hall", time: "7:30AM", description: "Push"),
-        Plan(location: "Morrison Dining", time: "8:30AM", description: "Breakfast"),
-        Plan(location: "Rose Hall", time: "1:30PM", description: "Lunch")
-    ]
+    @State private var mealPlans: [String: DayPlan] = [:]
     
     var body: some View {
         NavigationView {
             ScrollView {
                 LazyVStack(spacing: 0) {
-                    Section(header: sectionHeader) {
-                        ForEach(plans) { plan in
-                            PlanRowView(plan: plan)
-                            if plan.id != plans.last?.id {
-                                Divider()
-                                    .padding(.leading, 50)
+                    ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
+                        Section(header: sectionHeader(for: date)) {
+                            ForEach(mealPlans[date]?.meals ?? [], id: \.eatery) { meal in
+                                PlanRowView(meal: meal)
+                                if meal.eatery != mealPlans[date]?.meals.last?.eatery {
+                                    Divider()
+                                        .padding(.leading, 50)
+                                }
                             }
                         }
                     }
                 }
                 .background(Color(UIColor.systemGroupedBackground))
             }
-            .navigationTitle("Plan")
-            .navigationBarItems(trailing: Button(action: {
-                // Add new item action
-            }) {
-                Image(systemName: "square.and.pencil")
-            })
+            .navigationTitle("Meal Plans")
+            .onAppear(perform: loadData)
         }
     }
     
-    private var sectionHeader: some View {
-        Text("TODAY")
+    private func sectionHeader(for date: String) -> some View {
+        Text(date)
             .font(.caption)
             .foregroundColor(.purple)
             .frame(maxWidth: .infinity, alignment: .leading)
@@ -59,18 +52,43 @@ struct HomeTabView: View {
             .padding(.bottom, 5)
             .background(Color(UIColor.systemGroupedBackground))
     }
+    
+    private func loadData() {
+        // In a real app, you'd parse the JSON here
+        // For this example, we'll use a mock data structure
+        mealPlans = [
+            "2024-10-05": DayPlan(meals: [
+                Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:30pm", end: "4:00pm")),
+                Meal(eatery: "Keeton House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
+                Meal(eatery: "104West!", time: "Lunch", details: MealDetails(start: "12:30pm", end: "2:00pm"))
+            ]),
+            "2024-10-06": DayPlan(meals: [
+                Meal(eatery: "Becker House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm")),
+                Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:00pm", end: "4:00pm"))
+            ])
+        ]
+    }
 }
 
-struct Plan: Identifiable {
+struct DayPlan {
+    let meals: [Meal]
+}
+
+struct Meal: Identifiable {
     let id = UUID()
-    let location: String
+    let eatery: String
     let time: String
-    let description: String
+    let details: MealDetails
+}
+
+struct MealDetails {
+    let start: String
+    let end: String
 }
 
 struct PlanRowView: View {
-    let plan: Plan
-    @State private var isChecked = true
+    let meal: Meal
+    @State private var isChecked = false
     
     var body: some View {
         HStack {
@@ -80,14 +98,14 @@ struct PlanRowView: View {
                     isChecked.toggle()
                 }
             VStack(alignment: .leading) {
-                Text("\(plan.location) @ \(plan.time)")
+                Text("\(meal.eatery) @ \(meal.time)")
                     .font(.headline)
-                Text(plan.description)
+                Text("\(meal.details.start) - \(meal.details.end)")
                     .font(.subheadline)
                     .foregroundColor(.gray)
             }
             Spacer()
-            NavigationLink(destination: PlanDetailView(plan: plan)) {
+            NavigationLink(destination: MealDetailView(meal: meal)) {
                 HStack {
                     Text("Detail")
                         .foregroundColor(.gray)
@@ -101,20 +119,19 @@ struct PlanRowView: View {
     }
 }
 
-struct PlanDetailView: View {
-    let plan: Plan
+struct MealDetailView: View {
+    let meal: Meal
     
     var body: some View {
         VStack(alignment: .leading, spacing: 20) {
-            Text(plan.location)
+            Text(meal.eatery)
                 .font(.title)
-            Text(plan.time)
+            Text(meal.time)
                 .font(.headline)
-            Text(plan.description)
+            Text("\(meal.details.start) - \(meal.details.end)")
                 .font(.body)
         }
         .padding()
-        .navigationTitle("Plan Details")
+        .navigationTitle("Meal Details")
     }
 }
-
