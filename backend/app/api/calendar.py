@@ -3,6 +3,7 @@ from app.calendar_utils import get_calendar_service, get_free_busy, find_availab
 from app.dining_utils import get_eateries
 from googleapiclient.errors import HttpError
 from datetime import datetime, date, timedelta
+import json
 
 router = APIRouter()
 
@@ -42,8 +43,8 @@ async def create_event(event: dict):
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
-@router.get("/get-gym-assignment")
-async def get_gym_assignment(gym: str, date: date, create_event: bool = False):
+@router.get("/suggest-workout")
+async def suggest_workout(gym: str, date: date, create_event: bool = False):
     try:
         service = get_calendar_service()
         busy_slots = get_free_busy(service, date)
@@ -101,57 +102,6 @@ async def get_gym_assignment(gym: str, date: date, create_event: bool = False):
 
 # Dining
 
-
-@router.get("/suggest-meals")
-async def suggest_meals(date: date, create_event: bool = False):
-    try:
-        service = get_calendar_service()
-        busy_slots = get_free_busy(service, date)
-        eateries = await get_eateries()
-        
-        # Define meal times
-        meal_times = [
-            {"name": "Breakfast", "start": datetime.combine(date, datetime.min.time().replace(hour=7)), "duration": timedelta(minutes=30)},
-            {"name": "Lunch", "start": datetime.combine(date, datetime.min.time().replace(hour=12)), "duration": timedelta(minutes=45)},
-            {"name": "Dinner", "start": datetime.combine(date, datetime.min.time().replace(hour=18)), "duration": timedelta(minutes=60)}
-        ]
-        
-        suggested_meals = []
-        
-        for meal in meal_times:
-            # Find a free slot for the meal
-            meal_slot = find_free_slot(busy_slots, meal["start"], meal["duration"])
-            
-            if meal_slot:
-                # Find an open eatery for this meal time
-                eatery = find_open_eatery(eateries, date, meal_slot["start"].time(), meal_slot["end"].time())
-                
-                if eatery:
-                    event_summary = f"{meal['name']} at {eatery['Name']}"
-                    
-                    event = {
-                        'summary': event_summary,
-                        'location': eatery['Location'],
-                        'description': f"Suggested {meal['name']} at {eatery['Name']}",
-                        'start': {
-                            'dateTime': meal_slot["start"].isoformat(),
-                            'timeZone': 'America/New_York',
-                        },
-                        'end': {
-                            'dateTime': meal_slot["end"].isoformat(),
-                            'timeZone': 'America/New_York',
-                        },
-                    }
-                    
-                    if create_event:
-                        service.events().insert(calendarId='primary', body=event).execute()
-                    
-                    suggested_meals.append(event)
-        
-        return suggested_meals
-    except HttpError as error:
-        raise HTTPException(status_code=500, detail=str(error))
-
 def find_free_slot(busy_slots, start_time, duration):
     # Make start_time timezone-aware
     start_time = start_time.replace(tzinfo=EST_TIMEZONE)  # Adjust to your desired timezone
@@ -182,3 +132,86 @@ def find_open_eatery(eateries, date, start_time, end_time):
                     if event_start <= start_time and event_end >= end_time:
                         return eatery
     return None
+
+# Load meals data from JSON file
+def load_meals_data():
+    with open('meals_data.json', 'r') as file:
+        return json.load(file)
+
+@router.post("/suggest-meals")
+async def suggest_meals(date: date):
+    try:
+        # Load meals data
+        meals_data = load_meals_data()
+        
+        # Check if the date exists in the meals data
+        if str(date) not in meals_data:
+            raise HTTPException(status_code=404, detail="No meals found for the specified date.")
+        
+        # Get meals for the specified date
+        meals = meals_data[str(date)]["meals"]
+        
+        # Get the Google Calendar service
+        service = get_calendar_service()
+        
+        created_events = []
+        
+        for meal in meals:
+            details = meal["details"]
+            start_time_str = details["Start"]
+            end_time_str = details["End"]
+            
+            # Define meal duration based on meal type
+            if details["time"] == "Breakfast":
+                meal_duration = timedelta(minutes=30)
+            elif details["time"] == "Lunch" or details["time"] == "Late Lunch":
+                meal_duration = timedelta(minutes=45)
+            elif details["time"] == "Dinner" or details["time"] == "Late Dinner":
+                meal_duration = timedelta(minutes=60)
+            else:
+                continue  # Skip if the meal type is not recognized
+            
+            # Parse the start time to find a free slot
+            start_time = datetime.strptime(start_time_str, "%I:%M%p").replace(year=date.year, month=date.month, day=date.day, tzinfo=EST_TIMEZONE)
+            end_time = datetime.strptime(end_time_str, "%I:%M%p").replace(year=date.year, month=date.month, day=date.day, tzinfo=EST_TIMEZONE)
+            
+            # Get busy slots for the day
+            busy_slots = get_free_busy(service, date)
+            
+            # Find a free slot for the meal
+            meal_slot = find_free_slot(busy_slots, start_time, meal_duration)
+            
+            if meal_slot:
+                # Prepare the macro information
+                best_combination = details.get("Best combination", {})
+                macro_info = []
+                for food, values in best_combination.items():
+                    macro_info.append(f"{food}: {values[1]} calories, {values[2]}g protein, {values[3]}g carbs, {values[4]}g fats")
+                
+                # Create a detailed description
+                description = f"Suggested meal at {details['eatery']}.\n" + "\n".join(macro_info)
+                
+                event = {
+                    'summary': f"{details['time']} at {details['eatery']}",
+                    'location': details['eatery'],
+                    'description': description,
+                    'start': {
+                        'dateTime': meal_slot["start"].isoformat(),
+                        'timeZone': 'America/New_York',
+                    },
+                    'end': {
+                        'dateTime': meal_slot["end"].isoformat(),
+                        'timeZone': 'America/New_York',
+                    },
+                }
+                
+                # Create the event in Google Calendar
+                created_event = service.events().insert(calendarId='primary', body=event).execute()
+                created_events.append(created_event)
+        
+        return {"created_events": created_events}
+    
+    except HttpError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
