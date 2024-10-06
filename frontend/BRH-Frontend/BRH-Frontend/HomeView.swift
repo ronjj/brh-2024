@@ -32,6 +32,11 @@ struct HomeTabView: View {
                                         .padding(.leading, 50)
                                 }
                             }
+                            if let macros = mealPlans[date]?.macros {
+                                Divider()
+                                    .padding(.leading, 50)
+                                MacroTotalsRowView(macros: macros)
+                            }
                         }
                     }
                 }
@@ -72,38 +77,53 @@ struct HomeTabView: View {
     }
 
     private func loadData() {
-        // In a real app, you'd parse the JSON here and convert string dates to Date objects
-        // For this example, we'll use mock data that includes the "Best Combination" foods
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd"
-        
-        if let date1 = dateFormatter.date(from: "2024-10-05"),
-           let date2 = dateFormatter.date(from: "2024-10-06") {
-            mealPlans = [
-                date1: DayPlan(meals: [
-                    Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:30pm", end: "4:00pm", bestCombination: [
-                        Food(name: "Vegan Cheese Pizza", serving: 1, calories: 300, protein: 12, carbs: 38, fats: 15),
-                        Food(name: "Pepperoni Pizza", serving: 1, calories: 350, protein: 15, carbs: 35, fats: 18)
-                    ])),
-                    Meal(eatery: "Keeton House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm", bestCombination: [
-                        Food(name: "Taco Mania", serving: 1, calories: 400, protein: 20, carbs: 40, fats: 20),
-                        Food(name: "Queso Blanco Sauce", serving: 1, calories: 210, protein: 7, carbs: 6, fats: 18)
-                    ]))
-                ]),
-                date2: DayPlan(meals: [
-                    Meal(eatery: "Becker House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm", bestCombination: [
-                        Food(name: "Broccoli, Spinach & Chickpea Pasta", serving: 1, calories: 300, protein: 15, carbs: 40, fats: 10),
-                        Food(name: "Ancho Chili Spice Chicken Thigh", serving: 1, calories: 320, protein: 25, carbs: 0, fats: 20),
-                        Food(name: "Waffle Bar", serving: 1, calories: 350, protein: 6, carbs: 40, fats: 18)
-                    ]))
-                ])
-            ]
+            // In a real app, you'd parse the JSON here and convert string dates to Date objects
+            // For this example, we'll use mock data that includes the macros
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            if let date1 = dateFormatter.date(from: "2024-10-05"),
+               let date2 = dateFormatter.date(from: "2024-10-06") {
+                mealPlans = [
+                    date1: DayPlan(
+                        meals: [
+                            Meal(eatery: "Morrison Dining", time: "Late Lunch", details: MealDetails(start: "2:30pm", end: "4:00pm", bestCombination: [
+                                Food(name: "Vegan Cheese Pizza", serving: 1, calories: 300, protein: 12, carbs: 38, fats: 15),
+                                Food(name: "Pepperoni Pizza", serving: 1, calories: 350, protein: 15, carbs: 35, fats: 18)
+                            ])),
+                            Meal(eatery: "Keeton House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm", bestCombination: [
+                                Food(name: "Taco Mania", serving: 1, calories: 400, protein: 20, carbs: 40, fats: 20),
+                                Food(name: "Queso Blanco Sauce", serving: 1, calories: 210, protein: 7, carbs: 6, fats: 18)
+                            ]))
+                        ],
+                        macros: Macros(calories: 1760, protein: 84, carbs: 159, fats: 96)
+                    ),
+                    date2: DayPlan(
+                        meals: [
+                            Meal(eatery: "Becker House Dining", time: "Dinner", details: MealDetails(start: "5:00pm", end: "8:00pm", bestCombination: [
+                                Food(name: "Broccoli, Spinach & Chickpea Pasta", serving: 1, calories: 300, protein: 15, carbs: 40, fats: 10),
+                                Food(name: "Ancho Chili Spice Chicken Thigh", serving: 1, calories: 320, protein: 25, carbs: 0, fats: 20),
+                                Food(name: "Waffle Bar", serving: 1, calories: 350, protein: 6, carbs: 40, fats: 18)
+                            ]))
+                        ],
+                        macros: Macros(calories: 1620, protein: 73, carbs: 153, fats: 81)
+                    )
+                ]
+            }
         }
     }
-}
+
 
 struct DayPlan {
     let meals: [Meal]
+    let macros: Macros
+}
+
+struct Macros {
+    let calories: Int
+    let protein: Int
+    let carbs: Int
+    let fats: Int
 }
 
 struct Meal: Identifiable {
@@ -182,6 +202,27 @@ struct MealDetailView: View {
         }
         .listStyle(InsetGroupedListStyle())
         .navigationTitle("Meal Details")
+    }
+}
+
+struct MacroTotalsRowView: View {
+    let macros: Macros
+    
+    var body: some View {
+        HStack {
+            Image(systemName: "sum")
+                .foregroundColor(.purple)
+            VStack(alignment: .leading) {
+                Text("Daily Totals")
+                    .font(.headline)
+                Text("Cal: \(macros.calories) | P: \(macros.protein)g | C: \(macros.carbs)g | F: \(macros.fats)g")
+                    .font(.subheadline)
+                    .foregroundColor(.secondary)
+            }
+            Spacer()
+        }
+        .padding()
+        .background(Color(UIColor.secondarySystemGroupedBackground))
     }
 }
 
