@@ -35,7 +35,7 @@ if response.status_code == 200:
 
     for eatery in places:
         #Basic Information
-        name = eatery["nameshort"]
+        eatery_name = eatery["nameshort"]
         about = eatery["aboutshort"]
         latitude = eatery["latitude"]
 
@@ -93,7 +93,7 @@ if response.status_code == 200:
             dates.append(new_date)
 
         new_eatery = {
-            "Name": name,
+            "Name": eatery_name,
             "About": about,
             "Latitude": latitude,
             "Longitude": longitude,
@@ -103,8 +103,8 @@ if response.status_code == 200:
         }
 
         eateries.append(new_eatery)
+        print(new_eatery.values())
 
-    #HERE BOTH "eateries" and "food_dict" ARE POPULATED. HOW DO I ADD BOTH OF THEM NOW INTO JSON
     food_dict = fill_nutrition(food_dict)
 
     output_data = {
