@@ -16,47 +16,105 @@ struct HomeView: View {
     }
 }
 
+
 struct HomeTabView: View {
+    let plans = [
+        Plan(location: "Teagle Hall", time: "7:30AM", description: "Push"),
+        Plan(location: "Morrison Dining", time: "8:30AM", description: "Breakfast"),
+        Plan(location: "Rose Hall", time: "1:30PM", description: "Lunch")
+    ]
+    
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Welcome to the Home Tab!")
-                    .font(.title)
-                    .padding()
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    Section(header: sectionHeader) {
+                        ForEach(plans) { plan in
+                            PlanRowView(plan: plan)
+                            if plan.id != plans.last?.id {
+                                Divider()
+                                    .padding(.leading, 50)
+                            }
+                        }
+                    }
+                }
+                .background(Color(UIColor.systemGroupedBackground))
             }
-            .navigationBarTitle("Home", displayMode: .inline)
+            .navigationTitle("Plan")
+            .navigationBarItems(trailing: Button(action: {
+                // Add new item action
+            }) {
+                Image(systemName: "square.and.pencil")
+            })
         }
+    }
+    
+    private var sectionHeader: some View {
+        Text("TODAY")
+            .font(.caption)
+            .foregroundColor(.purple)
+            .frame(maxWidth: .infinity, alignment: .leading)
+            .padding(.horizontal)
+            .padding(.top, 20)
+            .padding(.bottom, 5)
+            .background(Color(UIColor.systemGroupedBackground))
     }
 }
 
-struct PreferencesTabView: View {
-    @AppStorage("userCalorieGoal") private var userCalorieGoal = ""
-    @AppStorage("userProteinGoal") private var userProteinGoal = ""
-    @AppStorage("userCarbGoal") private var userCarbGoal = ""
-    @AppStorage("userFatGoal") private var userFatGoal = ""
+struct Plan: Identifiable {
+    let id = UUID()
+    let location: String
+    let time: String
+    let description: String
+}
+
+struct PlanRowView: View {
+    let plan: Plan
+    @State private var isChecked = true
     
     var body: some View {
-        NavigationView {
-            Form {
-                Section(header: Text("Nutrition Goals")) {
-                    nutritionGoalRow(title: "Daily Calorie Goal", value: $userCalorieGoal, unit: "calories")
-                    nutritionGoalRow(title: "Protein Goal", value: $userProteinGoal, unit: "g")
-                    nutritionGoalRow(title: "Carb Goal", value: $userCarbGoal, unit: "g")
-                    nutritionGoalRow(title: "Fat Goal", value: $userFatGoal, unit: "g")
+        HStack {
+            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(isChecked ? .blue : .gray)
+                .onTapGesture {
+                    isChecked.toggle()
+                }
+            VStack(alignment: .leading) {
+                Text("\(plan.location) @ \(plan.time)")
+                    .font(.headline)
+                Text(plan.description)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+            Spacer()
+            NavigationLink(destination: PlanDetailView(plan: plan)) {
+                HStack {
+                    Text("Detail")
+                        .foregroundColor(.gray)
+                    Image(systemName: "chevron.right")
+                        .foregroundColor(.gray)
                 }
             }
-            .navigationBarTitle("Preferences", displayMode: .inline)
         }
-    }
-    
-    private func nutritionGoalRow(title: String, value: Binding<String>, unit: String) -> some View {
-        HStack {
-            Text(title)
-            Spacer()
-            TextField("Enter goal", text: value)
-                .keyboardType(.numberPad)
-                .multilineTextAlignment(.trailing)
-            Text(unit)
-        }
+        .padding()
+        .background(Color(UIColor.secondarySystemGroupedBackground))
     }
 }
+
+struct PlanDetailView: View {
+    let plan: Plan
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            Text(plan.location)
+                .font(.title)
+            Text(plan.time)
+                .font(.headline)
+            Text(plan.description)
+                .font(.body)
+        }
+        .padding()
+        .navigationTitle("Plan Details")
+    }
+}
+
