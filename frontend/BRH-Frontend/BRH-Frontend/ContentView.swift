@@ -45,7 +45,7 @@ struct MacroInputView: View {
     var body: some View {
         VStack(spacing: 20) {
             Text("Set Your Nutrition Goals")
-                .font(.largeTitle)
+                .font(.title)
                 .padding()
             
             nutritionInputView(title: "What is your daily caloric goal?", value: $userCalorieGoal, unit: "calories")

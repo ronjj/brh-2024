@@ -16,7 +16,7 @@ struct SplashScreenView: View {
                                startPoint: .bottomLeading,
                                endPoint: .topTrailing)
                 VStack {
-                    Text("Insync")
+                    Text("WellBite")
                         .font(.system(size: 60, weight: .bold, design: .rounded))
                         .foregroundColor(.white)
                         .scaleEffect(size)

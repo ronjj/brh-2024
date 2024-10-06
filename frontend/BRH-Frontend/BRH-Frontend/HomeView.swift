@@ -46,14 +46,22 @@ struct HomeTabView: View {
             }
             .navigationTitle("Meal Plans")
             .navigationBarItems(
-                trailing: Button(action: addToCalendar) {
-                    if isAddingToCalendar {
-                        ProgressView()
-                    } else {
-                        Text("Add Meals to Calendar")
+                trailing: 
+                    HStack {
+                    Button(action: addToCalendar) {
+                        if isAddingToCalendar {
+                            ProgressView()
+                        } else {
+                            Text("Add Meals to Calendar")
+                        }
+                    }
+                    .disabled(isAddingToCalendar)
+                    
+                    if !isAddingToCalendar {
+                        Image(systemName: "calendar")
+                            .foregroundStyle(Color.accentColor)
                     }
                 }
-                .disabled(isAddingToCalendar)
             )
             .onAppear(perform: loadData)
             .alert(isPresented: $showingCalendarAlert) {

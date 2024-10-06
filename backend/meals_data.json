@@ -324,10 +324,10 @@
             }
         ],
         "macros": {
-            "calories": 0,
-            "protein": 0,
-            "carbs": 0,
-            "fats": 0
+            "calories": 1472.0,
+            "protein": 72.0,
+            "carbs": 146.0,
+            "fats": 66.0
         }
     },
     "2024-10-10": {
