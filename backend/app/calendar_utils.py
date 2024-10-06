@@ -87,79 +87,7 @@ def get_calendar_service():
     
     return build("calendar", "v3", credentials=creds)
 
-# not needed for now
-# def get_upcoming_events(service, max_results=10):
-#     now = datetime.datetime.utcnow().isoformat() + "Z"
-#     events_result = service.events().list(
-#         calendarId="primary",
-#         timeMin=now,
-#         maxResults=max_results,
-#         singleEvents=True,
-#         orderBy="startTime",
-#     ).execute()
-#     return events_result.get("items", [])
-
-# not needed for now
-# def get_events_for_date(service, date: datetime.date):
-#     start_datetime = datetime.datetime.combine(date, datetime.time.min).astimezone(datetime.timezone.utc)
-#     end_datetime = datetime.datetime.combine(date, datetime.time.max).astimezone(datetime.timezone.utc)
-    
-#     start_str = start_datetime.isoformat()
-#     end_str = end_datetime.isoformat()
-
-#     events_result = service.events().list(
-#         calendarId="primary",
-#         timeMin=start_str,
-#         timeMax=end_str,
-#         singleEvents=True,
-#         orderBy="startTime",
-#     ).execute()
-#     return events_result.get("items", [])
-
-def get_free_slots(service, date: datetime.date):
-    # Convert the date to EST timezone
-    start_datetime = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=EST_TIMEZONE)
-    end_datetime = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=EST_TIMEZONE)
-    
-    body = {
-        "timeMin": start_datetime.isoformat(),
-        "timeMax": end_datetime.isoformat(),
-        "items": [{"id": "primary"}]  # TODO: make this add ALL calendars, or those specified by the user
-    }
-    
-    events_result = service.freebusy().query(body=body).execute()
-    busy_slots = events_result["calendars"]["primary"]["busy"]
-    
-    # Calculate free slots based on busy slots
-    free_slots = []
-    
-    # Convert busy slots to datetime objects
-    busy_times = []
-    for slot in busy_slots:
-        start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE)
-        end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE)
-        busy_times.append({"start": start, "end": end})
-
-    # Calculate free slots based on the entire day's time
-    current_time = start_datetime.time()
-    for busy in sorted(busy_times, key=lambda x: x["start"]):
-        busy_start = busy["start"].time()
-        busy_end = busy["end"].time()
-        
-        # If there is free time before the busy slot
-        if current_time < busy_start:
-            free_slots.append({"start": current_time, "end": busy_start})
-        
-        # Update current time to the end of the busy slot
-        current_time = max(current_time, busy_end)
-    
-    # If there is free time after the last busy slot until the end of the day
-    if current_time < end_datetime.time():
-        free_slots.append({"start": current_time, "end": end_datetime.time()})
-    
-    return free_slots
-
-# TODO: remove later
+# get all busy slots for the given date
 def get_free_busy(service, date: datetime.date):
     # Convert the date to EST timezone
     start_datetime = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=EST_TIMEZONE)
@@ -186,9 +114,9 @@ def get_gym_hours(gym: str, day: str) -> List[Dict[str, datetime.time]]:
     else:
         return [{"open": parse_time(schedule["open"]), "close": parse_time(schedule["close"])}]
 
-# TODO: remove later
+
 # returns a list of available slots for the gym on the given date, in the format of a list of dictionaries with start and end times
-def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
+def find_available_gym_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
     day_name = date.strftime("%A")
     gym_hours = get_gym_hours(gym, day_name)
     
@@ -198,8 +126,6 @@ def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
         start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE).time()
         end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE).time()
         busy_times.append({"start": start, "end": end})
-
-    print(busy_times)
     
     available_slots = []
     for hours in gym_hours:
@@ -213,3 +139,27 @@ def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
             available_slots.append({"start": current_time, "end": hours["close"]})
     
     return available_slots
+
+# def find_available_meal_slots(eatery: str, date: datetime.date, busy_slots: List[Dict]):
+#     day_name = date.strftime("%A")
+#     gym_hours = get_gym_hours(eatery, day_name)
+    
+#     # Convert busy slots to datetime.time objects in EST
+#     busy_times = []
+#     for slot in busy_slots:
+#         start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE).time()
+#         end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE).time()
+#         busy_times.append({"start": start, "end": end})
+    
+#     available_slots = []
+#     for hours in gym_hours:
+#         current_time = hours["open"]
+#         for busy in sorted(busy_times, key=lambda x: x["start"]):
+#             if current_time < busy["start"] and busy["start"] < hours["close"]:
+#                 available_slots.append({"start": current_time, "end": busy["start"]})
+#             current_time = max(current_time, busy["end"])
+        
+#         if current_time < hours["close"]:
+#             available_slots.append({"start": current_time, "end": hours["close"]})
+    
+#     return available_slots
