@@ -16,18 +16,57 @@ struct HomeView: View {
     }
 }
 
+
 struct HomeTabView: View {
     var body: some View {
         NavigationView {
-            VStack {
-                Text("Welcome to the Home Tab!")
-                    .font(.title)
-                    .padding()
+            List {
+                Section(header: Text("TODAY").font(.caption).foregroundColor(.purple)) {
+                    PlanRowView(location: "Teagle Hall", time: "7:30AM", description: "Push")
+                    PlanRowView(location: "Morrison Dining", time: "8:30AM", description: "Breakfast")
+                    PlanRowView(location: "Rose Hall", time: "1:30PM", description: "Lunch")
+                }
             }
-            .navigationBarTitle("Home", displayMode: .inline)
+            .listStyle(InsetGroupedListStyle())
+            .navigationTitle("Plan")
+            .navigationBarItems(trailing: Button(action: {
+                // Add new item action
+            }) {
+                Image(systemName: "square.and.pencil")
+            })
         }
     }
 }
+
+struct PlanRowView: View {
+    let location: String
+    let time: String
+    let description: String
+    @State private var isChecked = true
+    
+    var body: some View {
+        HStack {
+            Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
+                .foregroundColor(isChecked ? .blue : .gray)
+                .onTapGesture {
+                    isChecked.toggle()
+                }
+            VStack(alignment: .leading) {
+                Text("\(location) @ \(time)")
+                    .font(.headline)
+                Text(description)
+                    .font(.subheadline)
+                    .foregroundColor(.gray)
+            }
+            Spacer()
+            Text("Detail")
+                .foregroundColor(.blue)
+            Image(systemName: "chevron.right")
+                .foregroundColor(.gray)
+        }
+    }
+}
+
 
 struct PreferencesTabView: View {
     @AppStorage("userCalorieGoal") private var userCalorieGoal = ""
