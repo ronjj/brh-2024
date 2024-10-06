@@ -15,6 +15,7 @@
 		5499574A2CB23BB400ABCBD5 /* PreferencesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 549957492CB23BB400ABCBD5 /* PreferencesView.swift */; };
 		5499574C2CB2430500ABCBD5 /* SplashScreenView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5499574B2CB2430500ABCBD5 /* SplashScreenView.swift */; };
 		5499574E2CB2A23C00ABCBD5 /* GoogleCalendarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5499574D2CB2A23C00ABCBD5 /* GoogleCalendarView.swift */; };
+		549957502CB2B09000ABCBD5 /* meals_data.json in Resources */ = {isa = PBXBuildFile; fileRef = 5499574F2CB2B09000ABCBD5 /* meals_data.json */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -27,6 +28,7 @@
 		549957492CB23BB400ABCBD5 /* PreferencesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreferencesView.swift; sourceTree = "<group>"; };
 		5499574B2CB2430500ABCBD5 /* SplashScreenView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplashScreenView.swift; sourceTree = "<group>"; };
 		5499574D2CB2A23C00ABCBD5 /* GoogleCalendarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GoogleCalendarView.swift; sourceTree = "<group>"; };
+		5499574F2CB2B09000ABCBD5 /* meals_data.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; name = meals_data.json; path = ../../../backend/meals_data.json; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -61,6 +63,7 @@
 			isa = PBXGroup;
 			children = (
 				541258622CB0CA8200C2D520 /* BRH_FrontendApp.swift */,
+				5499574F2CB2B09000ABCBD5 /* meals_data.json */,
 				541258642CB0CA8200C2D520 /* ContentView.swift */,
 				5499574B2CB2430500ABCBD5 /* SplashScreenView.swift */,
 				541258702CB0D29F00C2D520 /* HomeView.swift */,
@@ -137,6 +140,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				549957502CB2B09000ABCBD5 /* meals_data.json in Resources */,
 				5412586A2CB0CA8300C2D520 /* Preview Assets.xcassets in Resources */,
 				541258672CB0CA8300C2D520 /* Assets.xcassets in Resources */,
 			);
