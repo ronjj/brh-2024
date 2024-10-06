@@ -1,6 +1,7 @@
 import requests
 from Food import Food
 from NutritionCaller import fill_nutrition
+import json
 
 food_dict = {}
 
@@ -28,8 +29,7 @@ if response.status_code == 200:
     #     - Start (start)
     #     - End (end)
     #     - Food: (Array)
-    #       - FoodItem (item)
-    #       - Category (category)
+    #       - String List
 
     eateries = []
 
@@ -104,8 +104,16 @@ if response.status_code == 200:
 
         eateries.append(new_eatery)
 
-    print(len(food_dict.keys()))
-    fill_nutrition(food_dict)
+    #HERE BOTH "eateries" and "food_dict" ARE POPULATED. HOW DO I ADD BOTH OF THEM NOW INTO JSON
+    food_dict = fill_nutrition(food_dict)
+
+    output_data = {
+        "eateries": eateries,
+        "food_dict": {"food_dict": {name: food.to_dict() if food else None for name, food in food_dict.items()}}
+    }
+
+    with open("eateries_and_food.json", "w") as json_file:
+        json.dump(output_data, json_file, indent=4)
 
 else:
     print(f"Failed to retrieve data. HTTP Status Code: {response.status_code}")
