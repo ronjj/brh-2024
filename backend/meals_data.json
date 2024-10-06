@@ -1,0 +1,507 @@
+{
+    "2024-10-05": {
+        "meals": [
+            {
+                "eatery": "Morrison Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Morrison Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:30pm",
+                    "End": "4:00pm",
+                    "Best combination": {
+                        "Vegan Cheese Pizza": [
+                            1,
+                            300.0,
+                            12.0,
+                            38.0,
+                            15.0
+                        ],
+                        "Pepperoni Pizza": [
+                            1,
+                            350.0,
+                            15.0,
+                            35.0,
+                            18.0
+                        ]
+                    },
+                    "difference": 83.66666666666666
+                }
+            },
+            {
+                "eatery": "Keeton House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Keeton House Dining",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {
+                        "Taco Mania": [
+                            1,
+                            400.0,
+                            20.0,
+                            40.0,
+                            20.0
+                        ],
+                        "Queso Blanco Sauce": [
+                            1,
+                            210.0,
+                            7.0,
+                            6.0,
+                            18.0
+                        ]
+                    },
+                    "difference": 73.66666666666666
+                }
+            },
+            {
+                "eatery": "104West!",
+                "time": "Lunch",
+                "details": {
+                    "eatery": "104West!",
+                    "time": "Lunch",
+                    "Start": "12:30pm",
+                    "End": "2:00pm",
+                    "Best combination": {
+                        "Pastrami Sandwich Bar": [
+                            1,
+                            500.0,
+                            30.0,
+                            40.0,
+                            25.0
+                        ]
+                    },
+                    "difference": 43.33333333333332
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1760.0,
+            "protein": 84.0,
+            "carbs": 159.0,
+            "fats": 96.0
+        }
+    },
+    "2024-10-06": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {
+                        "Broccoli, Spinach & Chickpea Pasta": [
+                            1,
+                            300.0,
+                            15.0,
+                            40.0,
+                            10.0
+                        ],
+                        "Ancho Chili Spice Chicken Thigh": [
+                            1,
+                            320.0,
+                            25.0,
+                            0.0,
+                            20.0
+                        ],
+                        "Waffle Bar": [
+                            1,
+                            350.0,
+                            6.0,
+                            40.0,
+                            18.0
+                        ]
+                    },
+                    "difference": 85.33333333333331
+                }
+            },
+            {
+                "eatery": "Morrison Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Morrison Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "4:00pm",
+                    "Best combination": {
+                        "Vegan Cheese Pizza": [
+                            1,
+                            300.0,
+                            12.0,
+                            38.0,
+                            15.0
+                        ],
+                        "Pepperoni Pizza": [
+                            1,
+                            350.0,
+                            15.0,
+                            35.0,
+                            18.0
+                        ]
+                    },
+                    "difference": 83.66666666666666
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1620.0,
+            "protein": 73.0,
+            "carbs": 153.0,
+            "fats": 81.0
+        }
+    },
+    "2024-10-07": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "3:30pm",
+                    "Best combination": {
+                        "Four Cheese, Tomato & Pesto Sheet Pizza": [
+                            1,
+                            350.0,
+                            15.0,
+                            40.0,
+                            18.0
+                        ],
+                        "Tuna Salad": [
+                            1,
+                            250.0,
+                            25.0,
+                            3.0,
+                            15.0
+                        ]
+                    },
+                    "difference": 96.33333333333331
+                }
+            },
+            {
+                "eatery": "Risley Dining Room",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Risley Dining Room",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "7:00pm",
+                    "Best combination": {
+                        "GF Potato Gnocci with Pesto Cream Sauce": [
+                            1,
+                            460.0,
+                            10.0,
+                            65.0,
+                            20.0
+                        ],
+                        "Cod Oreganata": [
+                            1,
+                            280.0,
+                            24.0,
+                            6.0,
+                            18.0
+                        ],
+                        "Poke Bar Sesame Tuna": [
+                            1,
+                            250.0,
+                            22.0,
+                            8.0,
+                            16.0
+                        ]
+                    },
+                    "difference": 62.33333333333332
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1590.0,
+            "protein": 96.0,
+            "carbs": 122.0,
+            "fats": 87.0
+        }
+    },
+    "2024-10-08": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "3:30pm",
+                    "Best combination": {
+                        "Tuna Salad": [
+                            1,
+                            250.0,
+                            25.0,
+                            3.0,
+                            15.0
+                        ],
+                        "Quinoa": [
+                            1,
+                            222.0,
+                            8.0,
+                            39.0,
+                            4.0
+                        ]
+                    },
+                    "difference": 342.3333333333333
+                }
+            },
+            {
+                "eatery": "Jansen's Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Jansen's Dining",
+                    "time": "Dinner",
+                    "Start": "4:30pm",
+                    "End": "7:30pm",
+                    "Best combination": {
+                        "Cornell Dairy Yogurt": [
+                            1,
+                            150.0,
+                            9.0,
+                            18.0,
+                            5.0
+                        ],
+                        "Grilled Cheese Sandwich": [
+                            1,
+                            400.0,
+                            15.0,
+                            36.0,
+                            20.0
+                        ],
+                        "Kale & Onion Grilled Cheese Sandwich": [
+                            1,
+                            450.0,
+                            15.0,
+                            50.0,
+                            22.0
+                        ]
+                    },
+                    "difference": 78.66666666666666
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1472.0,
+            "protein": 72.0,
+            "carbs": 146.0,
+            "fats": 66.0
+        }
+    },
+    "2024-10-09": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "3:30pm",
+                    "Best combination": {},
+                    "difference": 0
+                }
+            },
+            {
+                "eatery": "Becker House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Dinner",
+                    "Start": "6:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {},
+                    "difference": 0
+                }
+            }
+        ],
+        "macros": {
+            "calories": 0,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 0
+        }
+    },
+    "2024-10-10": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "3:30pm",
+                    "Best combination": {
+                        "Tuna Salad": [
+                            1,
+                            250.0,
+                            25.0,
+                            3.0,
+                            15.0
+                        ],
+                        "Quinoa": [
+                            1,
+                            222.0,
+                            8.0,
+                            39.0,
+                            4.0
+                        ]
+                    },
+                    "difference": 342.3333333333333
+                }
+            },
+            {
+                "eatery": "Keeton House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Keeton House Dining",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {
+                        "Pasta Bar": [
+                            1,
+                            300.0,
+                            10.0,
+                            50.0,
+                            5.0
+                        ],
+                        "Basil Pesto": [
+                            1,
+                            400.0,
+                            5.0,
+                            4.0,
+                            42.0
+                        ]
+                    },
+                    "difference": 97.66666666666666
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1172.0,
+            "protein": 48.0,
+            "carbs": 96.0,
+            "fats": 66.0
+        }
+    },
+    "2024-10-12": {
+        "meals": [
+            {
+                "eatery": "104West!",
+                "time": "Lunch",
+                "details": {
+                    "eatery": "104West!",
+                    "time": "Lunch",
+                    "Start": "12:30pm",
+                    "End": "2:00pm",
+                    "Best combination": {},
+                    "difference": 0
+                }
+            },
+            {
+                "eatery": "Becker House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {},
+                    "difference": 0
+                }
+            },
+            {
+                "eatery": "Morrison Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Morrison Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:30pm",
+                    "End": "4:00pm",
+                    "Best combination": {},
+                    "difference": 0
+                }
+            }
+        ],
+        "macros": {
+            "calories": 0,
+            "protein": 0,
+            "carbs": 0,
+            "fats": 0
+        }
+    },
+    "2024-10-11": {
+        "meals": [
+            {
+                "eatery": "Becker House Dining",
+                "time": "Late Lunch",
+                "details": {
+                    "eatery": "Becker House Dining",
+                    "time": "Late Lunch",
+                    "Start": "2:00pm",
+                    "End": "3:30pm",
+                    "Best combination": {
+                        "Tuna Salad": [
+                            1,
+                            250.0,
+                            25.0,
+                            3.0,
+                            15.0
+                        ],
+                        "Quinoa": [
+                            1,
+                            222.0,
+                            8.0,
+                            39.0,
+                            4.0
+                        ]
+                    },
+                    "difference": 342.3333333333333
+                }
+            },
+            {
+                "eatery": "Keeton House Dining",
+                "time": "Dinner",
+                "details": {
+                    "eatery": "Keeton House Dining",
+                    "time": "Dinner",
+                    "Start": "5:00pm",
+                    "End": "8:00pm",
+                    "Best combination": {
+                        "Jerk Chicken Thigh with Mango Salsa": [
+                            1,
+                            350.0,
+                            25.0,
+                            15.0,
+                            20.0
+                        ],
+                        "Caribbean Style Red Beans & Rice": [
+                            1,
+                            280.0,
+                            12.0,
+                            45.0,
+                            4.0
+                        ]
+                    },
+                    "difference": 60.33333333333332
+                }
+            }
+        ],
+        "macros": {
+            "calories": 1102.0,
+            "protein": 70.0,
+            "carbs": 102.0,
+            "fats": 43.0
+        }
+    }
+}
