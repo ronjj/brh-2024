@@ -14,53 +14,53 @@ from app.config import settings
 SCOPES = ["https://www.googleapis.com/auth/calendar", "https://www.googleapis.com/auth/calendar.events"]
 
 # Gym schedule representation
-GYM_SCHEDULE = {
-    "Helen Newman": {
-        "Monday": {"open": "06:00", "close": "21:00"},
-        "Tuesday": {"open": "06:00", "close": "21:00"},
-        "Wednesday": {"open": "06:00", "close": "21:00"},
-        "Thursday": {"open": "06:00", "close": "21:00"},
-        "Friday": {"open": "10:00", "close": "20:00"},
-        "Saturday": {"open": "10:00", "close": "20:00"},
-        "Sunday": {"open": "10:00", "close": "20:00"}
-    },
-    "Noyes": {
-        "Monday": {"open": "07:00", "close": "23:00"},
-        "Tuesday": {"open": "07:00", "close": "23:00"},
-        "Wednesday": {"open": "07:00", "close": "23:00"},
-        "Thursday": {"open": "07:00", "close": "23:00"},
-        "Friday": {"open": "14:00", "close": "22:00"},
-        "Saturday": {"open": "14:00", "close": "22:00"},
-        "Sunday": {"open": "14:00", "close": "22:00"}
-    },
-    "Teagle Downstairs": {
-        "Monday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
-        "Tuesday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
-        "Wednesday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
-        "Thursday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
-        "Friday": {"open": "07:00", "close": "22:45"},
-        "Saturday": {"open": "12:00", "close": "17:30"},
-        "Sunday": {"open": "12:00", "close": "17:30"}
-    },
-    "Teagle Upstairs": {
-        "Monday": {"open": "07:00", "close": "22:45"},
-        "Tuesday": {"open": "07:00", "close": "22:45"},
-        "Wednesday": {"open": "07:00", "close": "22:45"},
-        "Thursday": {"open": "07:00", "close": "22:45"},
-        "Friday": {"open": "07:00", "close": "22:45"},
-        "Saturday": {"open": "12:00", "close": "17:30"},
-        "Sunday": {"open": "12:00", "close": "17:30"}
-    },
-    "Toni Morrison": {
-        "Monday": {"open": "14:00", "close": "23:00"},
-        "Tuesday": {"open": "14:00", "close": "23:00"},
-        "Wednesday": {"open": "14:00", "close": "23:00"},
-        "Thursday": {"open": "14:00", "close": "23:00"},
-        "Friday": {"open": "12:00", "close": "22:00"},
-        "Saturday": {"open": "12:00", "close": "22:00"},
-        "Sunday": {"open": "12:00", "close": "22:00"}
-    }
-}
+# GYM_SCHEDULE = {
+#     "Helen Newman": {
+#         "Monday": {"open": "06:00", "close": "21:00"},
+#         "Tuesday": {"open": "06:00", "close": "21:00"},
+#         "Wednesday": {"open": "06:00", "close": "21:00"},
+#         "Thursday": {"open": "06:00", "close": "21:00"},
+#         "Friday": {"open": "10:00", "close": "20:00"},
+#         "Saturday": {"open": "10:00", "close": "20:00"},
+#         "Sunday": {"open": "10:00", "close": "20:00"}
+#     },
+#     "Noyes": {
+#         "Monday": {"open": "07:00", "close": "23:00"},
+#         "Tuesday": {"open": "07:00", "close": "23:00"},
+#         "Wednesday": {"open": "07:00", "close": "23:00"},
+#         "Thursday": {"open": "07:00", "close": "23:00"},
+#         "Friday": {"open": "14:00", "close": "22:00"},
+#         "Saturday": {"open": "14:00", "close": "22:00"},
+#         "Sunday": {"open": "14:00", "close": "22:00"}
+#     },
+#     "Teagle Downstairs": {
+#         "Monday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
+#         "Tuesday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
+#         "Wednesday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
+#         "Thursday": [{"open": "07:00", "close": "08:30"}, {"open": "10:00", "close": "22:45"}],
+#         "Friday": {"open": "07:00", "close": "22:45"},
+#         "Saturday": {"open": "12:00", "close": "17:30"},
+#         "Sunday": {"open": "12:00", "close": "17:30"}
+#     },
+#     "Teagle Upstairs": {
+#         "Monday": {"open": "07:00", "close": "22:45"},
+#         "Tuesday": {"open": "07:00", "close": "22:45"},
+#         "Wednesday": {"open": "07:00", "close": "22:45"},
+#         "Thursday": {"open": "07:00", "close": "22:45"},
+#         "Friday": {"open": "07:00", "close": "22:45"},
+#         "Saturday": {"open": "12:00", "close": "17:30"},
+#         "Sunday": {"open": "12:00", "close": "17:30"}
+#     },
+#     "Toni Morrison": {
+#         "Monday": {"open": "14:00", "close": "23:00"},
+#         "Tuesday": {"open": "14:00", "close": "23:00"},
+#         "Wednesday": {"open": "14:00", "close": "23:00"},
+#         "Thursday": {"open": "14:00", "close": "23:00"},
+#         "Friday": {"open": "12:00", "close": "22:00"},
+#         "Saturday": {"open": "12:00", "close": "22:00"},
+#         "Sunday": {"open": "12:00", "close": "22:00"}
+#     }
+# }
 
 EST_TIMEZONE = ZoneInfo("America/New_York")
 
@@ -160,56 +160,56 @@ def get_free_slots(service, date: datetime.date):
     return free_slots
 
 # TODO: remove later
-def get_free_busy(service, date: datetime.date):
-    # Convert the date to EST timezone
-    start_datetime = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=EST_TIMEZONE)
-    end_datetime = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=EST_TIMEZONE)
+# def get_free_busy(service, date: datetime.date):
+#     # Convert the date to EST timezone
+#     start_datetime = datetime.datetime.combine(date, datetime.time.min).replace(tzinfo=EST_TIMEZONE)
+#     end_datetime = datetime.datetime.combine(date, datetime.time.max).replace(tzinfo=EST_TIMEZONE)
     
-    body = {
-        "timeMin": start_datetime.isoformat(),
-        "timeMax": end_datetime.isoformat(),
-        "items": [{"id": "primary"}]  # TODO: make this add ALL calendars, or those specified by the user
-    }
+#     body = {
+#         "timeMin": start_datetime.isoformat(),
+#         "timeMax": end_datetime.isoformat(),
+#         "items": [{"id": "primary"}]  # TODO: make this add ALL calendars, or those specified by the user
+#     }
     
-    events_result = service.freebusy().query(body=body).execute()
-    busy_slots = events_result["calendars"]["primary"]["busy"]
+#     events_result = service.freebusy().query(body=body).execute()
+#     busy_slots = events_result["calendars"]["primary"]["busy"]
     
-    return busy_slots
+#     return busy_slots
 
 def parse_time(time_str: str) -> datetime.time:
     return datetime.datetime.strptime(time_str, "%H:%M").time()
 
-def get_gym_hours(gym: str, day: str) -> List[Dict[str, datetime.time]]:
-    schedule = GYM_SCHEDULE[gym][day]
-    if isinstance(schedule, list):
-        return [{"open": parse_time(slot["open"]), "close": parse_time(slot["close"])} for slot in schedule]
-    else:
-        return [{"open": parse_time(schedule["open"]), "close": parse_time(schedule["close"])}]
+# def get_gym_hours(gym: str, day: str) -> List[Dict[str, datetime.time]]:
+#     schedule = GYM_SCHEDULE[gym][day]
+#     if isinstance(schedule, list):
+#         return [{"open": parse_time(slot["open"]), "close": parse_time(slot["close"])} for slot in schedule]
+#     else:
+#         return [{"open": parse_time(schedule["open"]), "close": parse_time(schedule["close"])}]
 
 # TODO: remove later
 # returns a list of available slots for the gym on the given date, in the format of a list of dictionaries with start and end times
-def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
-    day_name = date.strftime("%A")
-    gym_hours = get_gym_hours(gym, day_name)
+# def find_available_slots(gym: str, date: datetime.date, busy_slots: List[Dict]):
+#     day_name = date.strftime("%A")
+#     gym_hours = get_gym_hours(gym, day_name)
     
-    # Convert busy slots to datetime.time objects in EST
-    busy_times = []
-    for slot in busy_slots:
-        start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE).time()
-        end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE).time()
-        busy_times.append({"start": start, "end": end})
+#     # Convert busy slots to datetime.time objects in EST
+#     busy_times = []
+#     for slot in busy_slots:
+#         start = datetime.datetime.fromisoformat(slot['start']).astimezone(EST_TIMEZONE).time()
+#         end = datetime.datetime.fromisoformat(slot['end']).astimezone(EST_TIMEZONE).time()
+#         busy_times.append({"start": start, "end": end})
 
-    print(busy_times)
+#     print(busy_times)
     
-    available_slots = []
-    for hours in gym_hours:
-        current_time = hours["open"]
-        for busy in sorted(busy_times, key=lambda x: x["start"]):
-            if current_time < busy["start"] and busy["start"] < hours["close"]:
-                available_slots.append({"start": current_time, "end": busy["start"]})
-            current_time = max(current_time, busy["end"])
+#     available_slots = []
+#     for hours in gym_hours:
+#         current_time = hours["open"]
+#         for busy in sorted(busy_times, key=lambda x: x["start"]):
+#             if current_time < busy["start"] and busy["start"] < hours["close"]:
+#                 available_slots.append({"start": current_time, "end": busy["start"]})
+#             current_time = max(current_time, busy["end"])
         
-        if current_time < hours["close"]:
-            available_slots.append({"start": current_time, "end": hours["close"]})
+#         if current_time < hours["close"]:
+#             available_slots.append({"start": current_time, "end": hours["close"]})
     
-    return available_slots
+#     return available_slots
