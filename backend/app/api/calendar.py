@@ -3,6 +3,7 @@ from app.calendar_utils import get_calendar_service, get_free_busy, find_availab
 from app.dining_utils import get_eateries
 from googleapiclient.errors import HttpError
 from datetime import datetime, date, timedelta
+import json
 
 router = APIRouter()
 
@@ -42,8 +43,8 @@ async def create_event(event: dict):
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
-@router.get("/get-gym-assignment")
-async def get_gym_assignment(gym: str, date: date, create_event: bool = False):
+@router.get("/suggest-workout")
+async def suggest_workout(gym: str, date: date, create_event: bool = False):
     try:
         service = get_calendar_service()
         busy_slots = get_free_busy(service, date)
@@ -182,3 +183,60 @@ def find_open_eatery(eateries, date, start_time, end_time):
                     if event_start <= start_time and event_end >= end_time:
                         return eatery
     return None
+
+# Load meals data from JSON file
+def load_meals_data():
+    with open('meals_data.json', 'r') as file:
+        return json.load(file)
+
+@router.post("/add-meals-to-calendar")
+async def add_meals_to_calendar(meal_date: date):
+    try:
+        # Load meals data
+        meals_data = load_meals_data()
+        
+        # Check if the date exists in the meals data
+        if str(meal_date) not in meals_data:
+            raise HTTPException(status_code=404, detail="No meals found for the specified date.")
+        
+        # Get meals for the specified date
+        meals = meals_data[str(meal_date)]["meals"]
+        
+        # Get the Google Calendar service
+        service = get_calendar_service()
+        
+        created_events = []
+        
+        for meal in meals:
+            details = meal["details"]
+            start_time_str = details["Start"]
+            end_time_str = details["End"]
+            
+            # Parse the start and end times
+            start_time = datetime.strptime(start_time_str, "%I:%M%p").replace(year=meal_date.year, month=meal_date.month, day=meal_date.day, tzinfo=EST_TIMEZONE)
+            end_time = datetime.strptime(end_time_str, "%I:%M%p").replace(year=meal_date.year, month=meal_date.month, day=meal_date.day, tzinfo=EST_TIMEZONE)
+            
+            event = {
+                'summary': f"{details['time']} at {details['eatery']}",
+                'location': details['eatery'],
+                'description': f"Meal at {details['eatery']}",
+                'start': {
+                    'dateTime': start_time.isoformat(),
+                    'timeZone': 'America/New_York',
+                },
+                'end': {
+                    'dateTime': end_time.isoformat(),
+                    'timeZone': 'America/New_York',
+                },
+            }
+            
+            # Create the event in Google Calendar
+            created_event = service.events().insert(calendarId='primary', body=event).execute()
+            created_events.append(created_event)
+        
+        return {"created_events": created_events}
+    
+    except HttpError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
