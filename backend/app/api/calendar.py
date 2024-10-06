@@ -1,5 +1,5 @@
 from fastapi import APIRouter, HTTPException
-from app.calendar_utils import get_calendar_service, get_free_busy, find_available_slots, get_random_workout
+from app.calendar_utils import get_calendar_service, get_free_slots, get_free_busy, find_available_slots, get_random_workout
 from googleapiclient.errors import HttpError
 from datetime import datetime, date, timedelta
 
@@ -23,6 +23,16 @@ async def create_event(event: dict):
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
+@router.get("/available-slots")
+async def get_available_slots(date: date):
+    try:
+        service = get_calendar_service()
+        free_slots = get_free_slots(service, date)
+        return { "available_slots": free_slots }
+    except HttpError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+# TODO: remove later
 @router.get("/available-gym-slots")
 async def get_available_gym_slots(gym: str, date: date):
     try:
