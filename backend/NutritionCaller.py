@@ -89,4 +89,4 @@ def fill_nutrition(food_dict):
         except Exception as e:
             print(f"Error during API call: {e}")
 
-    print(food_dict)
+    return food_dict

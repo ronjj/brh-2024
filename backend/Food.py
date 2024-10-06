@@ -88,3 +88,12 @@ class Food:
               f"Carbohydrates: {self.carbs}\n"
               f"Protein: {self.protein}\n"
               f"Fat: {self.fat}\n")
+
+    def to_dict(self):
+        return {
+            "name": self.title,
+            "calories": self.calories,
+            "protein": self.protein,
+            "carbohydrates": self.carbs,
+            "fat": self.fat
+        }
