@@ -49,61 +49,62 @@ if response.status_code == 200:
         #Food Information based on Date
         dates = []
 
-        #Looking at each day in specific dining hall
-        for day in eatery["operatingHours"]:
-            date = day["date"]
-            #Contains all the events for the day (Breakfast, lunch, dinner, late dinner, etc.)
-            events = []
+        if (eateryType == "Dining Room"):
+            #Looking at each day in specific dining hall
+            for day in eatery["operatingHours"]:
+                date = day["date"]
+                #Contains all the events for the day (Breakfast, lunch, dinner, late dinner, etc.)
+                events = []
 
-            #Looking at each service in a day
-            for event in day["events"]:
-                descr = event["descr"]
-                start = event["start"]
-                end = event["end"]
+                #Looking at each service in a day
+                for event in day["events"]:
+                    descr = event["descr"]
+                    start = event["start"]
+                    end = event["end"]
 
-                #Contains all food for the event
-                food = []
+                    #Contains all food for the event
+                    food = []
 
-                #Looking at each category in a service
-                for catType in event["menu"]:
-                    category = catType["category"]
+                    #Looking at each category in a service
+                    for catType in event["menu"]:
+                        category = catType["category"]
 
-                    #Looking at each food item in category
-                    for item in catType["items"]:
-                        name = item["item"]
-                        food.append(name)
+                        #Looking at each food item in category
+                        for item in catType["items"]:
+                            name = item["item"]
+                            food.append(name)
 
-                        if name not in food_dict:
-                            food_dict[name] = None
+                            if name not in food_dict:
+                                food_dict[name] = None
 
-                new_event = {
-                    "Description" : descr,
-                    "Start" : start,
-                    "End" : end,
-                    "Food" : food
+                    new_event = {
+                        "Description" : descr,
+                        "Start" : start,
+                        "End" : end,
+                        "Food" : food
+                    }
+
+                    events.append(new_event)
+
+                new_date = {
+                    "Date" : date,
+                    "Events" : events
                 }
 
-                events.append(new_event)
+                dates.append(new_date)
 
-            new_date = {
-                "Date" : date,
-                "Events" : events
+            new_eatery = {
+                "Name": eatery_name,
+                "About": about,
+                "Latitude": latitude,
+                "Longitude": longitude,
+                "Location": location,
+                "Type" : eateryType,
+                "Dates": dates
             }
 
-            dates.append(new_date)
-
-        new_eatery = {
-            "Name": eatery_name,
-            "About": about,
-            "Latitude": latitude,
-            "Longitude": longitude,
-            "Location": location,
-            "Type" : eateryType,
-            "Dates": dates
-        }
-
-        eateries.append(new_eatery)
-        print(new_eatery.values())
+            eateries.append(new_eatery)
+            print(new_eatery.values())
 
     food_dict = fill_nutrition(food_dict)
 
