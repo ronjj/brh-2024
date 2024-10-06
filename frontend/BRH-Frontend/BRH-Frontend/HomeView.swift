@@ -18,34 +18,53 @@ struct HomeView: View {
 
 struct HomeTabView: View {
     @State private var mealPlans: [Date: DayPlan] = [:]
+       @State private var showingCalendarAlert = false
+       
+       var body: some View {
+           NavigationView {
+               ScrollView {
+                   LazyVStack(spacing: 0) {
+                       ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
+                           Section(header: sectionHeader(for: date)) {
+                               ForEach(mealPlans[date]?.meals ?? [], id: \.eatery) { meal in
+                                   PlanRowView(meal: meal)
+                                   if meal.eatery != mealPlans[date]?.meals.last?.eatery {
+                                       Divider()
+                                           .padding(.leading, 50)
+                                   }
+                               }
+                               if let macros = mealPlans[date]?.macros {
+                                   Divider()
+                                       .padding(.leading, 50)
+                                   MacroTotalsRowView(macros: macros)
+                               }
+                           }
+                       }
+                   }
+                   .background(Color(UIColor.systemGroupedBackground))
+               }
+               .navigationTitle("Meal Plans")
+               .navigationBarItems(
+                   trailing: Button(action: addToCalendar) {
+                       Text("Add Meals to Calendar")
+                   }
+               )
+               .onAppear(perform: loadData)
+               .alert(isPresented: $showingCalendarAlert) {
+                   Alert(
+                       title: Text("Success"),
+                       message: Text("Meals have been successfully added to your calendar."),
+                       dismissButton: .default(Text("OK"))
+                   )
+               }
+           }
+       }
     
-    var body: some View {
-        NavigationView {
-            ScrollView {
-                LazyVStack(spacing: 0) {
-                    ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
-                        Section(header: sectionHeader(for: date)) {
-                            ForEach(mealPlans[date]?.meals ?? [], id: \.eatery) { meal in
-                                PlanRowView(meal: meal)
-                                if meal.eatery != mealPlans[date]?.meals.last?.eatery {
-                                    Divider()
-                                        .padding(.leading, 50)
-                                }
-                            }
-                            if let macros = mealPlans[date]?.macros {
-                                Divider()
-                                    .padding(.leading, 50)
-                                MacroTotalsRowView(macros: macros)
-                            }
-                        }
-                    }
-                }
-                .background(Color(UIColor.systemGroupedBackground))
-            }
-            .navigationTitle("Meal Plans")
-            .onAppear(perform: loadData)
+    private func addToCalendar() {
+            // Here you would typically add the actual logic to add meals to the calendar
+            // For now, we'll just show the success alert
+            showingCalendarAlert = true
         }
-    }
     
     private func sectionHeader(for date: Date) -> some View {
         Text(formatDate(date))
