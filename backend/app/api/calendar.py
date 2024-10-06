@@ -32,9 +32,17 @@ async def get_available_slots(date: date):
     except HttpError as error:
         raise HTTPException(status_code=500, detail=str(error))
 
-# TODO: remove later
-@router.get("/available-gym-slots")
-async def get_available_gym_slots(gym: str, date: date):
+@router.post("/create-event")
+async def create_event(event: dict):
+    try:
+        service = get_calendar_service()
+        created_event = service.events().insert(calendarId='primary', body=event).execute()
+        return created_event
+    except HttpError as error:
+        raise HTTPException(status_code=500, detail=str(error))
+
+@router.get("/get-gym-assignment")
+async def get_gym_assignment(gym: str, date: date, create_event: bool = False):
     try:
         service = get_calendar_service()
         busy_slots = get_free_busy(service, date)
@@ -73,15 +81,12 @@ async def get_available_gym_slots(gym: str, date: date):
                     },
                 }
                 
-                created_event = service.events().insert(calendarId='primary', body=event).execute()
+                if create_event:
+                    service.events().insert(calendarId='primary', body=event).execute()
                 
                 return {
                     "available_slots": available_slots,
-                    "created_event": {
-                        "summary": created_event["summary"],
-                        "start": created_event["start"]["dateTime"],
-                        "end": created_event["end"]["dateTime"],
-                    }
+                    "event": event
                 }
             else:
                 return {"available_slots": available_slots, "created_event": None, "message": f"No slot available for a {workout_duration} workout"}
