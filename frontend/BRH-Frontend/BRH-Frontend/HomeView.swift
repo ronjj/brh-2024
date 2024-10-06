@@ -238,7 +238,7 @@ struct HomeTabView: View {
         var body: some View {
             HStack {
                 Image(systemName: isChecked ? "checkmark.circle.fill" : "circle")
-                    .foregroundColor(isChecked ? .blue : .gray)
+                    .foregroundColor(isChecked ? .accentColor : .gray)
                     .onTapGesture {
                         isChecked.toggle()
                     }
@@ -293,7 +293,7 @@ struct HomeTabView: View {
         var body: some View {
             HStack {
                 Image(systemName: "sum")
-                    .foregroundColor(.purple)
+                    .foregroundColor(.accentColor)
                 VStack(alignment: .leading) {
                     Text("Daily Totals")
                         .font(.headline)
