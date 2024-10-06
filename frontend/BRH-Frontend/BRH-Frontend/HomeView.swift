@@ -18,47 +18,53 @@ struct HomeView: View {
 
 struct HomeTabView: View {
     @State private var mealPlans: [Date: DayPlan] = [:]
-      @State private var showingCalendarAlert = false
-      
-      var body: some View {
-          NavigationView {
-              ScrollView {
-                  LazyVStack(spacing: 0) {
-                      ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
-                          Section(header: sectionHeader(for: date)) {
-                              ForEach(mealPlans[date]?.meals ?? [], id: \.id) { meal in
-                                  PlanRowView(meal: meal)
-                                  if meal.id != mealPlans[date]?.meals.last?.id {
-                                      Divider()
-                                          .padding(.leading, 50)
-                                  }
-                              }
-                              if let macros = mealPlans[date]?.macros {
-                                  Divider()
-                                      .padding(.leading, 50)
-                                  MacroTotalsRowView(macros: macros)
-                              }
-                          }
-                      }
-                  }
-                  .background(Color(UIColor.systemGroupedBackground))
-              }
-              .navigationTitle("Meal Plans")
-              .navigationBarItems(
-                  trailing: Button(action: addToCalendar) {
-                      Text("Add Meals to Calendar")
-                  }
-              )
-              .onAppear(perform: loadData)
-              .alert(isPresented: $showingCalendarAlert) {
-                  Alert(
-                      title: Text("Success"),
-                      message: Text("Meals have been successfully added to your calendar."),
-                      dismissButton: .default(Text("OK"))
-                  )
-              }
-          }
-      }
+       @State private var showingCalendarAlert = false
+       @State private var isAddingToCalendar = false
+       
+       var body: some View {
+           NavigationView {
+               ScrollView {
+                   LazyVStack(spacing: 0) {
+                       ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
+                           Section(header: sectionHeader(for: date)) {
+                               ForEach(mealPlans[date]?.meals ?? [], id: \.id) { meal in
+                                   PlanRowView(meal: meal)
+                                   if meal.id != mealPlans[date]?.meals.last?.id {
+                                       Divider()
+                                           .padding(.leading, 50)
+                                   }
+                               }
+                               if let macros = mealPlans[date]?.macros {
+                                   Divider()
+                                       .padding(.leading, 50)
+                                   MacroTotalsRowView(macros: macros)
+                               }
+                           }
+                       }
+                   }
+                   .background(Color(UIColor.systemGroupedBackground))
+               }
+               .navigationTitle("Meal Plans")
+               .navigationBarItems(
+                   trailing: Button(action: addToCalendar) {
+                       if isAddingToCalendar {
+                           ProgressView()
+                       } else {
+                           Text("Add Meals to Calendar")
+                       }
+                   }
+                   .disabled(isAddingToCalendar)
+               )
+               .onAppear(perform: loadData)
+               .alert(isPresented: $showingCalendarAlert) {
+                   Alert(
+                       title: Text("Success"),
+                       message: Text("Meals have been successfully added to your calendar."),
+                       dismissButton: .default(Text("OK"))
+                   )
+               }
+           }
+       }
       
       // ... (keep the existing formatDate, daySuffix, and sectionHeader functions) ...
       
@@ -103,9 +109,15 @@ struct HomeTabView: View {
           }
       }
       
-      private func addToCalendar() {
-          showingCalendarAlert = true
-      }
+        private func addToCalendar() {
+           isAddingToCalendar = true
+           
+           // Simulate adding to calendar with a 2.5 second delay
+           DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+               isAddingToCalendar = false
+               showingCalendarAlert = true
+           }
+       }
     
     private func sectionHeader(for date: Date) -> some View {
         Text(formatDate(date))
