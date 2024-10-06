@@ -18,106 +18,123 @@ struct HomeView: View {
 
 struct HomeTabView: View {
     @State private var mealPlans: [Date: DayPlan] = [:]
-       @State private var showingCalendarAlert = false
-       @State private var isAddingToCalendar = false
-       
-       var body: some View {
-           NavigationView {
-               ScrollView {
-                   LazyVStack(spacing: 0) {
-                       ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
-                           Section(header: sectionHeader(for: date)) {
-                               ForEach(mealPlans[date]?.meals ?? [], id: \.id) { meal in
-                                   PlanRowView(meal: meal)
-                                   if meal.id != mealPlans[date]?.meals.last?.id {
-                                       Divider()
-                                           .padding(.leading, 50)
-                                   }
-                               }
-                               if let macros = mealPlans[date]?.macros {
-                                   Divider()
-                                       .padding(.leading, 50)
-                                   MacroTotalsRowView(macros: macros)
-                               }
-                           }
-                       }
-                   }
-                   .background(Color(UIColor.systemGroupedBackground))
-               }
-               .navigationTitle("Meal Plans")
-               .navigationBarItems(
-                   trailing: Button(action: addToCalendar) {
-                       if isAddingToCalendar {
-                           ProgressView()
-                       } else {
-                           Text("Add Meals to Calendar")
-                       }
-                   }
-                   .disabled(isAddingToCalendar)
-               )
-               .onAppear(perform: loadData)
-               .alert(isPresented: $showingCalendarAlert) {
-                   Alert(
-                       title: Text("Success"),
-                       message: Text("Meals have been successfully added to your calendar."),
-                       dismissButton: .default(Text("OK"))
-                   )
-               }
-           }
-       }
+    @State private var showingCalendarAlert = false
+    @State private var isAddingToCalendar = false
+    
+    var body: some View {
+        NavigationView {
+            ScrollView {
+                LazyVStack(spacing: 0) {
+                    ForEach(Array(mealPlans.keys.sorted()), id: \.self) { date in
+                        Section(header: sectionHeader(for: date)) {
+                            ForEach(sortedMeals(for: date), id: \.id) { meal in
+                                PlanRowView(meal: meal)
+                                if meal.id != sortedMeals(for: date).last?.id {
+                                    Divider()
+                                        .padding(.leading, 50)
+                                }
+                            }
+                            if let macros = mealPlans[date]?.macros {
+                                Divider()
+                                    .padding(.leading, 50)
+                                MacroTotalsRowView(macros: macros)
+                            }
+                        }
+                    }
+                }
+                .background(Color(UIColor.systemGroupedBackground))
+            }
+            .navigationTitle("Meal Plans")
+            .navigationBarItems(
+                trailing: Button(action: addToCalendar) {
+                    if isAddingToCalendar {
+                        ProgressView()
+                    } else {
+                        Text("Add Meals to Calendar")
+                    }
+                }
+                .disabled(isAddingToCalendar)
+            )
+            .onAppear(perform: loadData)
+            .alert(isPresented: $showingCalendarAlert) {
+                Alert(
+                    title: Text("Success"),
+                    message: Text("Meals have been successfully added to your calendar."),
+                    dismissButton: .default(Text("OK"))
+                )
+            }
+        }
+    }
       
       // ... (keep the existing formatDate, daySuffix, and sectionHeader functions) ...
       
-      private func loadData() {
-          guard let url = Bundle.main.url(forResource: "meals_data", withExtension: "json"),
-                let data = try? Data(contentsOf: url) else {
-              print("Error: Couldn't find or load meal_data.json")
-              return
-          }
-          
-          do {
-              let json = try JSONDecoder().decode([String: DayPlanData].self, from: data)
-              let dateFormatter = DateFormatter()
-              dateFormatter.dateFormat = "yyyy-MM-dd"
-              
-              for (dateString, dayPlanData) in json {
-                  if let date = dateFormatter.date(from: dateString) {
-                      let meals = dayPlanData.meals.map { mealData in
-                          Meal(id: "\(dateString)-\(mealData.eatery)-\(mealData.time)",
-                               eatery: mealData.eatery,
-                               time: mealData.time,
-                               details: MealDetails(start: mealData.details.Start,
-                                                    end: mealData.details.End,
-                                                    bestCombination: mealData.details.bestCombination.map { (name, values) in
-                                                        Food(name: name,
-                                                             serving: Int(values[0]),
-                                                             calories: Int(values[1]),
-                                                             protein: Int(values[2]),
-                                                             carbs: Int(values[3]),
-                                                             fats: Int(values[4]))
-                                                    }))
-                      }
-                      let macros = Macros(calories: dayPlanData.macros.calories,
-                                          protein: dayPlanData.macros.protein,
-                                          carbs: dayPlanData.macros.carbs,
-                                          fats: dayPlanData.macros.fats)
-                      mealPlans[date] = DayPlan(meals: meals, macros: macros)
-                  }
-              }
-          } catch {
-              print("Error decoding JSON: \(error)")
-          }
-      }
-      
-        private func addToCalendar() {
-           isAddingToCalendar = true
-           
-           // Simulate adding to calendar with a 2.5 second delay
-           DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
-               isAddingToCalendar = false
-               showingCalendarAlert = true
-           }
-       }
+    private func sortedMeals(for date: Date) -> [Meal] {
+        let meals = mealPlans[date]?.meals ?? []
+        return meals.sorted {
+            let time1 = parseTime($0.details.start)
+            let time2 = parseTime($1.details.start)
+            return time1 < time2
+        }
+    }
+    
+    private func parseTime(_ timeString: String) -> Date {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "h:mma"
+        return formatter.date(from: timeString) ?? Date.distantPast
+    }
+    
+    // ... (keep the existing formatDate, daySuffix, sectionHeader functions) ...
+    
+    private func loadData() {
+        guard let url = Bundle.main.url(forResource: "meals_data", withExtension: "json"),
+              let data = try? Data(contentsOf: url) else {
+            print("Error: Couldn't find or load meal_data.json")
+            return
+        }
+        
+        do {
+            let json = try JSONDecoder().decode([String: DayPlanData].self, from: data)
+            let dateFormatter = DateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd"
+            
+            for (dateString, dayPlanData) in json {
+                if let date = dateFormatter.date(from: dateString) {
+                    let meals = dayPlanData.meals.map { mealData in
+                        Meal(id: "\(dateString)-\(mealData.eatery)-\(mealData.time)",
+                             eatery: mealData.eatery,
+                             time: mealData.time,
+                             details: MealDetails(start: mealData.details.Start,
+                                                  end: mealData.details.End,
+                                                  bestCombination: mealData.details.bestCombination.map { (name, values) in
+                                                      Food(name: name,
+                                                           serving: Int(values[0]),
+                                                           calories: Int(values[1]),
+                                                           protein: Int(values[2]),
+                                                           carbs: Int(values[3]),
+                                                           fats: Int(values[4]))
+                                                  }))
+                    }
+                    let macros = Macros(calories: dayPlanData.macros.calories,
+                                        protein: dayPlanData.macros.protein,
+                                        carbs: dayPlanData.macros.carbs,
+                                        fats: dayPlanData.macros.fats)
+                    mealPlans[date] = DayPlan(meals: meals, macros: macros)
+                }
+            }
+        } catch {
+            print("Error decoding JSON: \(error)")
+        }
+    }
+    
+    private func addToCalendar() {
+        isAddingToCalendar = true
+        
+        // Simulate adding to calendar with a 2.5 second delay
+        DispatchQueue.main.asyncAfter(deadline: .now() + 2.5) {
+            isAddingToCalendar = false
+            showingCalendarAlert = true
+        }
+    }
     
     private func sectionHeader(for date: Date) -> some View {
         Text(formatDate(date))
